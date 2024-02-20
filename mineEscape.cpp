@@ -29,7 +29,7 @@ class MineEscape {
 
         class Tile {
             private:
-                int tile_rubble;
+                int tile_rubble = 0;
                 bool discovered = false;
             
             public:
@@ -205,7 +205,7 @@ class MineEscape {
         priority_queue<ProxTile, vector<ProxTile>, ProxTile::PQComp> pq;
         priority_queue<ProxTile, vector<ProxTile>, ProxTile::PQComp> TNTpq;
 
-        Tile& start = Map[srow][scol];
+        Tile start = Map[srow][scol];
         pq.push(ProxTile(start.getRubbleMap(),srow,scol));
         start.discover();
 
@@ -221,15 +221,14 @@ class MineEscape {
             col = next.getCol();
             rubble = next.getRubble();
 
-            // Tile tile = Map[row][col];
-            // int old_rubble = tile.getRubbleMap();
+            Tile& tile = Map[row][col];
 
 
             if (rubble != -1) {
-                if (rubble != 0) {
+                if (rubble != 0 && tile.getRubbleMap() == rubble) {
                     cleared++;
                     total_rubble += rubble;
-                    Map[row][col].clearRubble();
+                    tile.clearRubble();
                     if (verbose_mode) {
                         cout << "Cleared: " << rubble << " at [" << row << "," << col << "]\n";
                     }
@@ -302,18 +301,20 @@ class MineEscape {
                             if (N_rubble != 0) {
                             Nt.discover();
                             TNTpq.push(ProxTile(N_rubble, row-1, col));
+                            Nt.clearRubble();
                             // pq.push(ProxTile(N_rubble, rowt-1, colt));
                             }
                             else if (!Nt.isDiscovered()) {
                                 Nt.discover();
                             }
                         }
-                        if (col+1 != matrix_size) {
+                        if (row+1 != matrix_size) {
                             Tile& Et = Map[row][col+1];
                             int E_rubble = Et.getRubbleMap();
                             if (E_rubble != 0) {
                                 Et.discover();
                                 TNTpq.push(ProxTile(E_rubble, row, col+1));
+                                Et.clearRubble();
                                 // pq.push(ProxTile(N_rubble, rowt-1, colt));
                             }
                             else if (!Et.isDiscovered()) {
@@ -324,8 +325,9 @@ class MineEscape {
                             Tile& St = Map[row+1][col];
                             int S_rubble = St.getRubbleMap();
                             if (S_rubble != 0) {
-                            St.discover();
-                            TNTpq.push(ProxTile(S_rubble, row+1, col));
+                                St.discover();
+                                TNTpq.push(ProxTile(S_rubble, row+1, col));
+                                St.clearRubble();
                             // pq.push(ProxTile(N_rubble, rowt-1, colt));
                             }
                             else if (!St.isDiscovered()) {
@@ -336,8 +338,9 @@ class MineEscape {
                             Tile& Wt = Map[row][col-1];
                             int W_rubble = Wt.getRubbleMap();
                             if (W_rubble != 0) {
-                            Wt.discover();
-                            TNTpq.push(ProxTile(W_rubble, row, col-1));
+                                Wt.discover();
+                                TNTpq.push(ProxTile(W_rubble, row, col-1));
+                                Wt.clearRubble();
                             // pq.push(ProxTile(N_rubble, rowt-1, colt));
                             }
                             else if (!Wt.isDiscovered()) {
