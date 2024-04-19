@@ -30,6 +30,8 @@ class MineEscape {
         int max_rubble = -1;
         int TNT = -1;
 
+        //vector<const int> v{1,2,3};
+
 
         int cleared = 0;
         int total_rubble = 0;
@@ -109,10 +111,6 @@ class MineEscape {
                 int getCol() const {
                     return col;
                 }
-
-                void clearPQTilerubble() {
-                    rubble = 0;
-                }
                 
         };
 
@@ -129,8 +127,15 @@ class MineEscape {
             }
         }
 
-    // priority_queue<ProxTile, vector<ProxTile>, ProxTile::PQComp> pq;
-    // priority_queue<ProxTile, vector<ProxTile>, ProxTile::PQComp> TNTpq;
+    void printHelp() {
+        cout << "You are a miner armed with dynamite and stuck in a collapsed mine.\n";
+        cout << "You will move tile by tile until to escape, blowing up rubble and TNT if necessary.\n";
+        cout << "To run the game, you must pass in one or more mode types, as well as a input text file (mine matrix). \n";
+        cout << "Allowed modes:\n";
+        cout << "verbose (-v) - prints rubble clearings and TNT explosions, and where they take place \n";
+        cout << "median  (-m) - prints the median rubble cleared at each clearing\n";
+        cout << "stats   (-s) - at the end of the game, prints statistics on first, last, easiest, and hardest tiles cleared.\n";
+    }
     priority_queue<int, vector<int>, std::less<int>>    lower;
     priority_queue<int, vector<int>, std::greater<int>> upper;
     vector<vector<int>> stats_vec;
@@ -156,7 +161,7 @@ class MineEscape {
             switch (choice)
             {
             case 'h':
-                //printHelp();
+                printHelp();
                 exit(0);
 
             case 'm':
@@ -506,19 +511,5 @@ int main(int argc, char *argv[])
     object.readMine();
     object.escape();
     object.output();
-
-    // std::vector<int> vec = {1, 2, 3, 4, 5};
-
-    // // Create a reference to the first element
-    // const int& first_element = vec.front();
-
-    // // Output the value of the first element before popping
-    // std::cout << "Before popping: " << first_element << std::endl;
-
-    // // Pop the first element off the vector
-    // vec.erase(vec.begin());
-
-    // // Output the value of the first element after popping
-    // std::cout << "After popping: " << first_element << std::endl;
 
 }
